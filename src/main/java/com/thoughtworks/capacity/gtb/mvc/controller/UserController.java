@@ -7,6 +7,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @RestController
@@ -25,7 +27,17 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public UserDTO login(@RequestParam String username, @RequestParam String password) {
+    public UserDTO login(@RequestParam
+                             @NotNull(message = "The username cannot be null")
+                             @Size(min = 3, message = "The length of username is too short")
+                             @Size(max = 10, message = "The length of username is too long")
+                             @Pattern(regexp = "^[0-9a-zA-Z_]+$", message = "The username cannot contain any other character than number, alphabet and underline")
+                                     String username,
+                         @RequestParam
+                         @NotNull(message = "The password cannot be null")
+                         @Size(min = 5, message = "The length of password is too short")
+                         @Size(max = 12, message = "The length of password is too long")
+                                 String password) {
         return userService.login(username, password);
     }
 }
