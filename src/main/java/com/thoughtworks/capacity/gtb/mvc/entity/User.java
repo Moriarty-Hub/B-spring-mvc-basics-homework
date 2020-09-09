@@ -57,11 +57,13 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return username.equals(user.username);
+        return username.equals(user.username) &&
+                password.equals(user.password) &&
+                Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username);
+        return Objects.hash(username, password, email);
     }
 }
