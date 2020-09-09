@@ -1,11 +1,25 @@
 package com.thoughtworks.capacity.gtb.mvc.entity;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class User {
 
+    @NotNull(message = "The username cannot be null")
+    @Size(min = 3, message = "The length of username is too short")
+    @Size(max = 10, message = "The length of username is too long")
+    @Pattern(regexp = "^[0-9a-zA-Z_]+$", message = "The username cannot contain any other character than number, alphabet and underline")
     private String username;
+
+    @NotNull(message = "The password cannot be null")
+    @Size(min = 5, message = "The length of password is too short")
+    @Size(max = 12, message = "The length of password is too long")
     private String password;
+
+    @Email(message = "Invalid email address")
     private String email;
 
     public User(String username, String password, String email) {
