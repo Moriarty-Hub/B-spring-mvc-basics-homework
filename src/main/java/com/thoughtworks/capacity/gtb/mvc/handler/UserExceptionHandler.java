@@ -3,6 +3,7 @@ package com.thoughtworks.capacity.gtb.mvc.handler;
 import com.thoughtworks.capacity.gtb.mvc.exception.ExceptionResult;
 import com.thoughtworks.capacity.gtb.mvc.exception.UserAlreadyExistException;
 import com.thoughtworks.capacity.gtb.mvc.exception.UsernameOrPasswordNotCorrectException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -20,13 +21,14 @@ public class UserExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistException.class)
     public ResponseEntity<ExceptionResult> userAlreadyExistExceptionHandler(UserAlreadyExistException exception) {
-        ExceptionResult exceptionResult = new ExceptionResult(exception.getMessage());
+        ExceptionResult exceptionResult = new ExceptionResult(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
         return ResponseEntity.badRequest().body(exceptionResult);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResult> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception) {
-        ExceptionResult exceptionResult = new ExceptionResult(Objects.requireNonNull(exception.getBindingResult().getFieldError()).getDefaultMessage());
+        ExceptionResult exceptionResult = new ExceptionResult(HttpStatus.BAD_REQUEST.value(),
+                Objects.requireNonNull(exception.getBindingResult().getFieldError()).getDefaultMessage());
         return ResponseEntity.badRequest().body(exceptionResult);
     }
 
@@ -37,19 +39,20 @@ public class UserExceptionHandler {
             message = constraint.getMessage();
             break;
         }
-        ExceptionResult errorResult = new ExceptionResult(message);
+        ExceptionResult errorResult = new ExceptionResult(HttpStatus.BAD_REQUEST.value(), message);
         return ResponseEntity.badRequest().body(errorResult);
     }
 
     @ExceptionHandler(UsernameOrPasswordNotCorrectException.class)
     public ResponseEntity<ExceptionResult> usernameOrPasswordNotCorrectExceptionHandler(UsernameOrPasswordNotCorrectException exception) {
-        ExceptionResult exceptionResult = new ExceptionResult(exception.getMessage());
+        ExceptionResult exceptionResult = new ExceptionResult(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
         return ResponseEntity.badRequest().body(exceptionResult);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ExceptionResult> missingServletRequestParameterExceptionHandler(MissingServletRequestParameterException exception) {
-        ExceptionResult exceptionResult = new ExceptionResult(String.format(ERROR_INFO_FORMAT_FOR_MISSED_PARAMETER, exception.getParameterName()));
+        ExceptionResult exceptionResult = new ExceptionResult(HttpStatus.BAD_REQUEST.value(),
+                String.format(ERROR_INFO_FORMAT_FOR_MISSED_PARAMETER, exception.getParameterName()));
         return ResponseEntity.badRequest().body(exceptionResult);
     }
 }

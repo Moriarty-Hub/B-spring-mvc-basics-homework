@@ -2,9 +2,11 @@ package com.thoughtworks.capacity.gtb.mvc.exception;
 
 public class ExceptionResult {
 
+    private Integer errorCode;
     private String message;
 
-    public ExceptionResult(String message) {
+    public ExceptionResult(Integer errorCode, String message) {
+        this.errorCode = errorCode;
         this.message = message;
     }
 
@@ -14,5 +16,13 @@ public class ExceptionResult {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Integer getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(Integer errorCode) {
+        this.errorCode = errorCode;
     }
 }
