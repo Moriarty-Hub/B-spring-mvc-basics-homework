@@ -5,6 +5,7 @@ import com.thoughtworks.capacity.gtb.mvc.exception.UserAlreadyExistException;
 import com.thoughtworks.capacity.gtb.mvc.exception.UsernameOrPasswordNotCorrectException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -14,6 +15,8 @@ import java.util.Objects;
 
 @ControllerAdvice
 public class UserExceptionHandler {
+
+    private static final String ERROR_INFO_FORMAT_FOR_MISSED_PARAMETER = "The parameter %s cannot be null";
 
     @ExceptionHandler(UserAlreadyExistException.class)
     public ResponseEntity<ExceptionResult> userAlreadyExistExceptionHandler(UserAlreadyExistException exception) {
@@ -41,6 +44,12 @@ public class UserExceptionHandler {
     @ExceptionHandler(UsernameOrPasswordNotCorrectException.class)
     public ResponseEntity<ExceptionResult> usernameOrPasswordNotCorrectExceptionHandler(UsernameOrPasswordNotCorrectException exception) {
         ExceptionResult exceptionResult = new ExceptionResult(exception.getMessage());
+        return ResponseEntity.badRequest().body(exceptionResult);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ExceptionResult> missingServletRequestParameterExceptionHandler(MissingServletRequestParameterException exception) {
+        ExceptionResult exceptionResult = new ExceptionResult(String.format(ERROR_INFO_FORMAT_FOR_MISSED_PARAMETER, exception.getParameterName()));
         return ResponseEntity.badRequest().body(exceptionResult);
     }
 }
